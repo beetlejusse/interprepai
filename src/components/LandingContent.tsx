@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 // import { AnimatedShinyTextDemo } from "./LandingShinyText";
 import { RainbowButton } from "./ui/rainbow-button";
@@ -5,7 +7,6 @@ import WordFadeIn from "./ui/word-fade-in";
 import { Roboto } from "next/font/google";
 import Link from "next/link";
 import { RoughNotation } from "react-rough-notation";
-
 
 const roboto = Roboto({ weight: "500", subsets: ["latin"] });
 
@@ -24,14 +25,27 @@ const LandingContent = (props: Props) => {
         className={` ${roboto.className} text-3xl md:text-5xl lg:text-7xl text-center text-white`}
       />
 
-      
       <p className="text-center font-semibold text-xs md:text-sm lg:text-base">
-      Solve <RoughNotation type="box" show={true} color="yellow"> 1,000+ Problems  </RoughNotation> with video solutions asked in various companies here and crack coding interviews at your dream companies<RoughNotation type="underline" show={true} color="yellow"> completely FREE.</RoughNotation>With flagship features like Resume builder and Personalized Dashboard. 
-        </p>
-        <Link href={"/main"}>
-      <RainbowButton className=" rounded-[7px] mt-3 text-lg text-black font-semibold hover:animate-color-change" style={{ padding: "10px 20px" , background: "#d3dbd5"}}>
-        {props.ButtonText}
-      </RainbowButton>
+        Solve{" "}
+        <RoughNotation type="box" show={true} color="yellow">
+          {" "}
+          1,000+ Problems{" "}
+        </RoughNotation>{" "}
+        with video solutions asked in various companies here and crack coding
+        interviews at your dream companies
+        <RoughNotation type="underline" show={true} color="yellow">
+          {" "}
+          completely FREE.
+        </RoughNotation>
+        With flagship features like Resume builder and Personalized Dashboard.
+      </p>
+      <Link href={"/sign-in"}>
+        <RainbowButton
+          className=" rounded-[7px] mt-3 text-lg text-black font-semibold hover:animate-color-change"
+          style={{ padding: "10px 20px", background: "#d3dbd5" }}
+        >
+          {props.ButtonText}
+        </RainbowButton>
       </Link>
     </div>
   );
