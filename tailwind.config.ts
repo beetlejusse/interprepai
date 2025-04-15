@@ -7,15 +7,19 @@ export default {
 		"./src/components/**/*.{js,ts,jsx,tsx,mdx}",
 		"./src/app/**/*.{js,ts,jsx,tsx,mdx}",
 	],
+	prefix: "",
 	theme: {
+		container: {
+			center: true,
+			padding: "2rem",
+			screens: {
+			  "2xl": "1400px",
+			},
+		},
 		extend: {
 			colors: {
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
-				card: {
-					DEFAULT: 'hsl(var(--card))',
-					foreground: 'hsl(var(--card-foreground))'
-				},
 				popover: {
 					DEFAULT: 'hsl(var(--popover))',
 					foreground: 'hsl(var(--popover-foreground))'
@@ -39,6 +43,18 @@ export default {
 				destructive: {
 					DEFAULT: 'hsl(var(--destructive))',
 					foreground: 'hsl(var(--destructive-foreground))'
+				},
+				card: {
+					DEFAULT: "hsl(var(--card))",
+					foreground: "hsl(var(--card-foreground))",
+				},
+				sidebar: {
+					DEFAULT: "hsl(var(--sidebar-background))",
+					foreground: "hsl(var(--sidebar-foreground))",
+					border: "hsl(var(--sidebar-border))",
+					ring: "hsl(var(--sidebar-ring))",
+					accent: "hsl(var(--sidebar-accent))",
+					"accent-foreground": "hsl(var(--sidebar-accent-foreground))",
 				},
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
