@@ -40,7 +40,6 @@ export function ResumePreview({ templateId }: ResumePreviewProps) {
 
             <div className="p-6 flex justify-center">
               <div className="w-full max-w-[800px] aspect-[1/1.414] bg-white rounded-md shadow-lg overflow-hidden">
-                {/* This would be the actual resume preview */}
                 <div className="w-full h-full p-8 flex flex-col">
                   <div className="mb-6">
                     <h1 className="text-3xl font-bold text-black">John Doe</h1>
