@@ -5,6 +5,8 @@ import Navbar from "@/components/Navbar";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import NextTopLoader from "nextjs-toploader";
+import { ClerkProvider } from "@clerk/nextjs";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const geistSans = localFont({
   src: "../fonts/GeistVF.woff",
@@ -28,19 +30,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    <ClerkProvider>
       <html lang="en">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          <header>
-            <header></header>
-          </header>
-          <Analytics />
-          <SpeedInsights />
-          <NextTopLoader color="gray" showSpinner={false} />
-          <Navbar />
-          {children}
-        </body>
+          <body
+            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          >
+            <header>
+              <header></header>
+            </header>
+            <Analytics />
+            <SpeedInsights />
+            <NextTopLoader color="gray" showSpinner={true} />
+            <Navbar />
+            {children}
+          </body>
       </html>
+    </ClerkProvider>
   );
 }
