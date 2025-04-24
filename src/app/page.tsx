@@ -139,7 +139,7 @@ export default function Home() {
         </Button>
       </div>
 
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
+      {/* <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
         <h2 className="text-white text-sm font-bold text-center">
           Made with ❤️ by{" "}
           <a
@@ -151,7 +151,7 @@ export default function Home() {
             beetlejusse
           </a>
         </h2>
-      </div>
+      </div> */}
     </main>
   );
 }
