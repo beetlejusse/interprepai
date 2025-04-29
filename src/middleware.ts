@@ -4,7 +4,8 @@ const isprotectedRoute = createRouteMatcher([
     '/resume-builder',
     '/api',
     '/code-compiler',
-    "/dashboard"
+    "/dashboard",
+    "/roadmaps"
 ])
 console.log(isprotectedRoute)
 
