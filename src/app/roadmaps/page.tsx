@@ -1,7 +1,5 @@
-import React from 'react'
+import RoadmapPage from "@/components/roadmap/roadmap-page"
 
-export const page = () => {
-  return (
-    <div>roadmaops</div>
-  )
+export default function Home() {
+  return <RoadmapPage />
 }
