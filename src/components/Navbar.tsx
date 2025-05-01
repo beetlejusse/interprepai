@@ -14,11 +14,9 @@ const Navbar = () => {
       </Link>
       <div className="text-white flex gap-3 items-center">
         <Link href={"/resume-builder"}>
-          <RainbowButton
-            className={` flex gap-2 font-seminold h-10 text-sm tracking-wider px-4`}
-          >
+          <Button className="bg-teal-600  text-black rounded-2xl flex gap-2 font-seminold h-10 text-sm tracking-wider px-4 hover:bg-white/80 transition-colors duration-200">
             Resume Builder
-          </RainbowButton>
+            </Button>
         </Link>
         <Link href={"/code-compiler"}>
           <Button className="bg-amber-400 text-black rounded-2xl flex gap-2 font-seminold h-10 text-sm tracking-wider px-4 hover:bg-white/80 transition-colors duration-200">
