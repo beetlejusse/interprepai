@@ -17,7 +17,7 @@ export default {
 			},
 		},
 		extend: {
-			colors: {
+			colors: {	
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				popover: {
