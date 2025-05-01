@@ -132,13 +132,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Floating CTA */}
-      <div className="fixed bottom-6 right-6 z-50">
-        <Button className="rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 text-black shadow-lg shadow-yellow-300/30 px-6 py-3 text-base font-bold hover:scale-105 transition">
-          <a href="/sign-up">Join InterPrepAi Now 🚀</a>
-        </Button>
-      </div>
-
       {/* <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
         <h2 className="text-white text-sm font-bold text-center">
           Made with ❤️ by{" "}

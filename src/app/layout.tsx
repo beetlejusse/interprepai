@@ -7,6 +7,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import NextTopLoader from "nextjs-toploader";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/theme-provider";
+import ChatAssistant from "@/components/ChatAssistant";
 
 const geistSans = localFont({
   src: "../fonts/GeistVF.woff",
@@ -43,6 +44,7 @@ export default function RootLayout({
             <NextTopLoader color="gray" showSpinner={true} />
             <Navbar />
             {children}
+            <ChatAssistant />
           </body>
       </html>
     </ClerkProvider>
