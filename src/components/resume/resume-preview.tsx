@@ -11,10 +11,25 @@ import { Separator } from "@/components/ui/seprator"
 
 interface ResumePreviewProps {
   templateId: string
+  resumeData: any
 }
 
-export function ResumePreview({ templateId }: ResumePreviewProps) {
+export function ResumePreview({ templateId, resumeData }: ResumePreviewProps) {
   const [exportFormat, setExportFormat] = useState("pdf")
+
+  // Helper function to format contact info
+  const formatContactInfo = () => {
+    const { email, phone, location } = resumeData.personal
+    return [email, phone, location].filter(Boolean).join(" • ")
+  }
+
+  // Helper function to split description into bullet points
+  const formatDescription = (description: string) => {
+    return description
+      .split("\n")
+      .filter((line) => line.trim())
+      .map((line) => line.trim().replace(/^- /, ""))
+  }
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -42,89 +57,83 @@ export function ResumePreview({ templateId }: ResumePreviewProps) {
               <div className="w-full max-w-[800px] aspect-[1/1.414] bg-white rounded-md shadow-lg overflow-hidden">
                 <div className="w-full h-full p-8 flex flex-col">
                   <div className="mb-6">
-                    <h1 className="text-3xl font-bold text-black">John Doe</h1>
-                    <p className="text-gray-700">Software Engineer</p>
+                    <h1 className="text-3xl font-bold text-black">
+                      {resumeData.personal.firstName} {resumeData.personal.lastName}
+                    </h1>
+                    <p className="text-gray-700">{resumeData.experience[0]?.title || "Professional"}</p>
                     <div className="flex flex-wrap gap-2 mt-2 text-sm text-gray-600">
-                      <span>john.doe@example.com</span>
-                      <span>•</span>
-                      <span>(123) 456-7890</span>
-                      <span>•</span>
-                      <span>San Francisco, CA</span>
+                      <span>{formatContactInfo()}</span>
                     </div>
                   </div>
 
-                  <div className="mb-4">
-                    <h2 className="text-xl font-bold text-black border-b border-gray-300 pb-1 mb-2">
-                      Professional Summary
-                    </h2>
-                    <p className="text-gray-700 text-sm">
-                      Experienced software engineer with a proven track record of developing scalable applications and
-                      leading cross-functional teams. Skilled in JavaScript, React, and Node.js with a focus on creating
-                      intuitive user experiences and optimizing application performance.
-                    </p>
-                  </div>
+                  {resumeData.summary.content && (
+                    <div className="mb-4">
+                      <h2 className="text-xl font-bold text-black border-b border-gray-300 pb-1 mb-2">
+                        Professional Summary
+                      </h2>
+                      <p className="text-gray-700 text-sm">{resumeData.summary.content}</p>
+                    </div>
+                  )}
 
-                  <div className="mb-4">
-                    <h2 className="text-xl font-bold text-black border-b border-gray-300 pb-1 mb-2">Work Experience</h2>
-                    <div className="mb-3">
-                      <div className="flex justify-between">
-                        <h3 className="font-bold text-gray-800">Senior Software Engineer</h3>
-                        <span className="text-sm text-gray-600">Jan 2020 - Present</span>
+                  {resumeData.experience.length > 0 && (
+                    <div className="mb-4">
+                      <h2 className="text-xl font-bold text-black border-b border-gray-300 pb-1 mb-2">Work Experience</h2>
+                      {resumeData.experience.map((exp: any, index: number) => (
+                        <div key={exp.id} className="mb-3">
+                          <div className="flex justify-between">
+                            <h3 className="font-bold text-gray-800">{exp.title}</h3>
+                            <span className="text-sm text-gray-600">
+                              {exp.startDate} - {exp.current ? "Present" : exp.endDate}
+                            </span>
+                          </div>
+                          <div className="flex justify-between">
+                            <p className="text-gray-700">{exp.company}</p>
+                            <span className="text-sm text-gray-600">{exp.location}</span>
+                          </div>
+                          {exp.description && (
+                            <ul className="list-disc list-inside text-sm text-gray-700 mt-1">
+                              {formatDescription(exp.description).map((point, i) => (
+                                <li key={i}>{point}</li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {resumeData.education.length > 0 && (
+                    <div className="mb-4">
+                      <h2 className="text-xl font-bold text-black border-b border-gray-300 pb-1 mb-2">Education</h2>
+                      {resumeData.education.map((edu: any, index: number) => (
+                        <div key={edu.id} className="mb-2">
+                          <div className="flex justify-between">
+                            <h3 className="font-bold text-gray-800">{edu.degree}</h3>
+                            <span className="text-sm text-gray-600">
+                              {edu.startDate} - {edu.endDate}
+                            </span>
+                          </div>
+                          <p className="text-gray-700">{edu.institution}</p>
+                          {edu.description && (
+                            <p className="text-sm text-gray-700 mt-1">{edu.description}</p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {resumeData.skills.length > 0 && (
+                    <div>
+                      <h2 className="text-xl font-bold text-black border-b border-gray-300 pb-1 mb-2">Skills</h2>
+                      <div className="flex flex-wrap gap-2">
+                        {resumeData.skills.map((skill: any) => (
+                          <Badge key={skill.id} variant="outline" className="bg-gray-100 text-gray-800">
+                            {skill.name}
+                          </Badge>
+                        ))}
                       </div>
-                      <div className="flex justify-between">
-                        <p className="text-gray-700">Tech Solutions Inc.</p>
-                        <span className="text-sm text-gray-600">San Francisco, CA</span>
-                      </div>
-                      <ul className="list-disc list-inside text-sm text-gray-700 mt-1">
-                        <li>
-                          Led the development of a customer-facing web application that increased user engagement by 40%
-                        </li>
-                        <li>Mentored junior developers and conducted code reviews to ensure code quality</li>
-                        <li>Implemented CI/CD pipelines that reduced deployment time by 60%</li>
-                      </ul>
                     </div>
-                  </div>
-
-                  <div className="mb-4">
-                    <h2 className="text-xl font-bold text-black border-b border-gray-300 pb-1 mb-2">Education</h2>
-                    <div className="mb-2">
-                      <div className="flex justify-between">
-                        <h3 className="font-bold text-gray-800">Bachelor of Science in Computer Science</h3>
-                        <span className="text-sm text-gray-600">2012 - 2016</span>
-                      </div>
-                      <p className="text-gray-700">University of California, Berkeley</p>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h2 className="text-xl font-bold text-black border-b border-gray-300 pb-1 mb-2">Skills</h2>
-                    <div className="flex flex-wrap gap-2">
-                      <Badge variant="outline" className="bg-gray-100 text-gray-800">
-                        JavaScript
-                      </Badge>
-                      <Badge variant="outline" className="bg-gray-100 text-gray-800">
-                        React
-                      </Badge>
-                      <Badge variant="outline" className="bg-gray-100 text-gray-800">
-                        Node.js
-                      </Badge>
-                      <Badge variant="outline" className="bg-gray-100 text-gray-800">
-                        TypeScript
-                      </Badge>
-                      <Badge variant="outline" className="bg-gray-100 text-gray-800">
-                        GraphQL
-                      </Badge>
-                      <Badge variant="outline" className="bg-gray-100 text-gray-800">
-                        AWS
-                      </Badge>
-                      <Badge variant="outline" className="bg-gray-100 text-gray-800">
-                        Docker
-                      </Badge>
-                      <Badge variant="outline" className="bg-gray-100 text-gray-800">
-                        CI/CD
-                      </Badge>
-                    </div>
-                  </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -292,4 +301,3 @@ export function ResumePreview({ templateId }: ResumePreviewProps) {
     </div>
   )
 }
-

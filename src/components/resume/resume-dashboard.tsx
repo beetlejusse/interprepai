@@ -13,11 +13,62 @@ export function ResumeDashboard() {
   const [activeTab, setActiveTab] = useState("templates")
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null)
   const [completionProgress, setCompletionProgress] = useState(0)
+  const [resumeData, setResumeData] = useState({
+    personal: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      location: "",
+      website: "",
+      linkedin: "",
+    },
+    summary: {
+      content: "",
+    },
+    experience: [
+      {
+        id: "exp1",
+        title: "",
+        company: "",
+        location: "",
+        startDate: "",
+        endDate: "",
+        current: false,
+        description: "",
+      },
+    ],
+    education: [
+      {
+        id: "edu1",
+        degree: "",
+        institution: "",
+        location: "",
+        startDate: "",
+        endDate: "",
+        description: "",
+      },
+    ],
+    skills: [{ id: "skill1", name: "", level: "Intermediate" }],
+    projects: [
+      {
+        id: "proj1",
+        name: "",
+        description: "",
+        url: "",
+        startDate: "",
+        endDate: "",
+      },
+    ],
+    certifications: [],
+    languages: [],
+    references: [],
+    customSections: [],
+  })
 
   const handleTemplateSelect = (templateId: string) => {
     setSelectedTemplate(templateId)
     setActiveTab("editor")
-    // Initialize with some progress when template is selected
     setCompletionProgress(10)
   }
 
@@ -29,8 +80,12 @@ export function ResumeDashboard() {
     setCompletionProgress(newProgress)
   }
 
+  const updateResumeData = (newData: any) => {
+    setResumeData(newData)
+  }
+
   return (
-    <div className="container max-w-screen-2xl py-6 space-y-6 ">
+    <div className="container max-w-screen-2xl py-6 space-y-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Resume Builder</h1>
@@ -103,6 +158,8 @@ export function ResumeDashboard() {
           {selectedTemplate && (
             <ResumeEditor
               templateId={selectedTemplate}
+              resumeData={resumeData}
+              onUpdateResumeData={updateResumeData}
               onUpdateProgress={updateProgress}
               onComplete={() => setActiveTab("preview")}
             />
@@ -110,10 +167,11 @@ export function ResumeDashboard() {
         </TabsContent>
 
         <TabsContent value="preview" className="mt-6">
-          {selectedTemplate && completionProgress >= 50 && <ResumePreview templateId={selectedTemplate} />}
+          {selectedTemplate && completionProgress >= 50 && (
+            <ResumePreview templateId={selectedTemplate} resumeData={resumeData} />
+          )}
         </TabsContent>
       </Tabs>
     </div>
   )
 }
-
