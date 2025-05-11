@@ -1,15 +1,17 @@
-import type { Metadata } from "next";
-import CodeCompiler from "@/components/code-compiler/code-compiler";
-
-export const metadata: Metadata = {
-  title: "AI Code Compiler",
-  description: "A modern AI-powered code compiler with dark theme",
-};
+"use client";
 
 export default function HomePage() {
   return (
     <>
-      <CodeCompiler />
+      <div className="h-screen gap-4 p-4">
+        <iframe
+          src="https://www.scaler.com/topics/cpp/online-cpp-compiler/"
+          title="Practice Code"
+          width="100%"
+          height="100%"
+          style={{ border: "" }}
+        />
+      </div>
     </>
   );
 }

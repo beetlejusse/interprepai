@@ -18,12 +18,12 @@ export default function AiAssistant({ suggestion, isGenerating, language }: AiAs
   const formatSuggestion = (text: string) => {
     if (!text) return []
 
-    // Simple formatting to separate sections
     const sections = []
 
-    if (text.includes("Explanation") && showExplanation) {
-      const explanationMatch = text.match(/Explanation:?([\s\S]*?)(?=Optimizations:|Best Practices:|$)/i)
-      if (explanationMatch && explanationMatch[1]) {
+    // Case-insensitive and flexible regex for section matching
+    if (showExplanation) {
+      const explanationMatch = text.match(/Explanation:?\s*([\s\S]*?)(?=(Optimizations:|Best Practices:|$))/i)
+      if (explanationMatch && explanationMatch[1].trim()) {
         sections.push({
           title: "Explanation",
           content: explanationMatch[1].trim(),
@@ -31,9 +31,9 @@ export default function AiAssistant({ suggestion, isGenerating, language }: AiAs
       }
     }
 
-    if (text.includes("Optimization") && showOptimizations) {
-      const optimizationsMatch = text.match(/Optimizations:?([\s\S]*?)(?=Best Practices:|$)/i)
-      if (optimizationsMatch && optimizationsMatch[1]) {
+    if (showOptimizations) {
+      const optimizationsMatch = text.match(/Optimizations:?\s*([\s\S]*?)(?=(Best Practices:|$))/i)
+      if (optimizationsMatch && optimizationsMatch[1].trim()) {
         sections.push({
           title: "Optimizations",
           content: optimizationsMatch[1].trim(),
@@ -41,9 +41,9 @@ export default function AiAssistant({ suggestion, isGenerating, language }: AiAs
       }
     }
 
-    if (text.includes("Best Practices") && showBestPractices) {
-      const bestPracticesMatch = text.match(/Best Practices:?([\s\S]*?)$/i)
-      if (bestPracticesMatch && bestPracticesMatch[1]) {
+    if (showBestPractices) {
+      const bestPracticesMatch = text.match(/Best Practices:?\s*([\s\S]*?)$/i)
+      if (bestPracticesMatch && bestPracticesMatch[1].trim()) {
         sections.push({
           title: "Best Practices",
           content: bestPracticesMatch[1].trim(),
@@ -51,7 +51,7 @@ export default function AiAssistant({ suggestion, isGenerating, language }: AiAs
       }
     }
 
-    // If no sections were found, just return the whole text
+    // Fallback for unformatted text
     if (sections.length === 0 && text.trim()) {
       sections.push({
         title: "AI Suggestions",

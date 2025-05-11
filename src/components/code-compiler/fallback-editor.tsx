@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useRef, useEffect } from "react"
 
 interface FallbackEditorProps {

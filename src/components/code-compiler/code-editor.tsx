@@ -24,8 +24,9 @@ export default function CodeEditor({ code, setCode, language }: CodeEditorProps)
   const getLanguageExtension = (lang: string) => {
     switch (lang) {
       case "javascript":
+        return javascript({ jsx: false })
       case "typescript":
-        return javascript()
+        return javascript({ typescript: true })
       case "python":
         return python()
       case "java":
@@ -33,7 +34,7 @@ export default function CodeEditor({ code, setCode, language }: CodeEditorProps)
       case "c":
         return cpp()
       default:
-        return javascript()
+        return javascript({ jsx: false })
     }
   }
 
@@ -76,7 +77,6 @@ export default function CodeEditor({ code, setCode, language }: CodeEditorProps)
   })
 
   useEffect(() => {
-    // Import CodeMirror dynamically to avoid SSR issues
     const initializeEditor = async () => {
       if (!editorRef.current) return
 
@@ -113,13 +113,12 @@ export default function CodeEditor({ code, setCode, language }: CodeEditorProps)
 
     initializeEditor()
 
-    // Clean up on unmount
     return () => {
       if (editorViewRef.current) {
         editorViewRef.current.destroy()
       }
     }
-  }, [language])
+  }, [language, setCode])
 
   // Update editor content when code prop changes
   useEffect(() => {

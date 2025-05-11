@@ -23,7 +23,7 @@ const Navbar = () => {
             Practice Code
           </Button>
         </Link>
-        <Link href={"/dashboard"}>
+        <Link href={"/dashboard"} >
           <Button className="bg-white text-black rounded-2xl flex gap-2 font-seminold h-10 text-sm tracking-wider px-4 hover:bg-white/80 transition-colors duration-200">
             Dashboard
           </Button>
