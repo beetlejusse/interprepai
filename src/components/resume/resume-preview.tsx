@@ -8,10 +8,47 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/seprator"
+import jsPDF from "jspdf"
+
+// Define ResumeData interface for type safety
+interface ResumeData {
+  personal: {
+    firstName: string
+    lastName: string
+    email: string
+    phone: string
+    location: string
+  }
+  summary: {
+    content: string
+  }
+  experience: Array<{
+    id: string
+    title: string
+    company: string
+    location: string
+    startDate: string
+    endDate: string
+    current: boolean
+    description: string
+  }>
+  education: Array<{
+    id: string
+    degree: string
+    institution: string
+    startDate: string
+    endDate: string
+    description: string
+  }>
+  skills: Array<{
+    id: string
+    name: string
+  }>
+}
 
 interface ResumePreviewProps {
   templateId: string
-  resumeData: any
+  resumeData: ResumeData
 }
 
 export function ResumePreview({ templateId, resumeData }: ResumePreviewProps) {
@@ -31,6 +68,109 @@ export function ResumePreview({ templateId, resumeData }: ResumePreviewProps) {
       .map((line) => line.trim().replace(/^- /, ""))
   }
 
+  // Download resume as PDF, DOCX, or TXT
+  const handleDownload = () => {
+    try {
+      if (exportFormat === "pdf") {
+        const doc = new jsPDF()
+        doc.setFontSize(16)
+        doc.text(`${resumeData.personal.firstName} ${resumeData.personal.lastName}`, 10, 10)
+        doc.setFontSize(12)
+        doc.text(formatContactInfo(), 10, 20)
+        doc.text(resumeData.summary.content || "", 10, 30)
+        // Add more sections as needed
+        let yOffset = 40
+        if (resumeData.experience.length > 0) {
+          doc.text("Work Experience", 10, yOffset)
+          yOffset += 10
+          resumeData.experience.forEach((exp) => {
+            doc.text(`${exp.title} at ${exp.company}`, 10, yOffset)
+            doc.text(`${exp.startDate} - ${exp.current ? "Present" : exp.endDate}`, 10, yOffset + 5)
+            yOffset += 15
+          })
+        }
+        doc.save(`${resumeData.personal.firstName}_Resume.pdf`)
+      } else if (exportFormat === "txt") {
+        const textContent = `
+${resumeData.personal.firstName} ${resumeData.personal.lastName}
+${formatContactInfo()}
+${resumeData.summary.content || ""}
+
+Work Experience:
+${resumeData.experience
+  .map(
+    (exp) =>
+      `${exp.title} at ${exp.company}\n${exp.startDate} - ${exp.current ? "Present" : exp.endDate}\n${
+        exp.description
+      }`
+  )
+  .join("\n\n")}
+
+Education:
+${resumeData.education
+  .map((edu) => `${edu.degree} at ${edu.institution}\n${edu.startDate} - ${edu.endDate}`)
+  .join("\n\n")}
+
+Skills:
+${resumeData.skills.map((skill) => skill.name).join(", ")}
+        `.trim()
+        const blob = new Blob([textContent], { type: "text/plain" })
+        const url = URL.createObjectURL(blob)
+        const link = document.createElement("a")
+        link.href = url
+        link.download = `${resumeData.personal.firstName}_Resume.txt`
+        link.click()
+        URL.revokeObjectURL(url)
+      } else if (exportFormat === "docx") {
+        // DOCX export requires a library like `docx`. Placeholder for now.
+        alert("DOCX export is not implemented. Consider using a library like 'docx'.")
+      }
+    } catch (error) {
+      console.error("Download failed:", error)
+      alert("Failed to download resume. Please try again.")
+    }
+  }
+
+  // Print resume
+  const handlePrint = () => {
+    try {
+      window.print()
+    } catch (error) {
+      console.error("Print failed:", error)
+      alert("Failed to print resume. Please try again.")
+    }
+  }
+
+  // Edit resume (placeholder: redirect or open modal)
+  const handleEdit = () => {
+    try {
+      // Replace with your actual edit logic, e.g., redirect to an edit page
+      alert("Redirecting to edit page (placeholder).")
+      // Example: window.location.href = `/edit-resume/${templateId}`
+    } catch (error) {
+      console.error("Edit failed:", error)
+      alert("Failed to edit resume. Please try again.")
+    }
+  }
+
+  // Share resume
+  const handleShare = () => {
+    try {
+      if (navigator.share) {
+        navigator.share({
+          title: `${resumeData.personal.firstName}'s Resume`,
+          text: "Check out my resume!",
+          url: window.location.href, // Replace with actual resume URL if available
+        })
+      } else {
+        alert("Share functionality not supported in this browser.")
+      }
+    } catch (error) {
+      console.error("Share failed:", error)
+      alert("Failed to share resume. Please try again.")
+    }
+  }
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div className="lg:col-span-2">
@@ -42,19 +182,19 @@ export function ResumePreview({ templateId, resumeData }: ResumePreviewProps) {
                 <p className="text-sm text-muted-foreground">This is how your resume will look</p>
               </div>
               <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm" className="gap-2">
+                {/* <Button variant="outline" size="sm" className="gap-2 button" onClick={handlePrint}>
                   <Printer size={16} />
                   <span className="hidden sm:inline">Print</span>
-                </Button>
-                <Button variant="outline" size="sm" className="gap-2">
+                </Button> */}
+                {/* <Button variant="outline" size="sm" className="gap-2 button" onClick={handleEdit}>
                   <Edit size={16} />
                   <span className="hidden sm:inline">Edit</span>
-                </Button>
+                </Button> */}
               </div>
             </div>
 
             <div className="p-6 flex justify-center">
-              <div className="w-full max-w-[800px] aspect-[1/1.414] bg-white rounded-md shadow-lg overflow-hidden">
+              <div className="w-full max-w-[800px] aspect-[1/1.414] bg-white rounded-md shadow-lg overflow-hidden resume-preview">
                 <div className="w-full h-full p-8 flex flex-col">
                   <div className="mb-6">
                     <h1 className="text-3xl font-bold text-black">
@@ -78,7 +218,7 @@ export function ResumePreview({ templateId, resumeData }: ResumePreviewProps) {
                   {resumeData.experience.length > 0 && (
                     <div className="mb-4">
                       <h2 className="text-xl font-bold text-black border-b border-gray-300 pb-1 mb-2">Work Experience</h2>
-                      {resumeData.experience.map((exp: any, index: number) => (
+                      {resumeData.experience.map((exp, index: number) => (
                         <div key={exp.id} className="mb-3">
                           <div className="flex justify-between">
                             <h3 className="font-bold text-gray-800">{exp.title}</h3>
@@ -105,7 +245,7 @@ export function ResumePreview({ templateId, resumeData }: ResumePreviewProps) {
                   {resumeData.education.length > 0 && (
                     <div className="mb-4">
                       <h2 className="text-xl font-bold text-black border-b border-gray-300 pb-1 mb-2">Education</h2>
-                      {resumeData.education.map((edu: any, index: number) => (
+                      {resumeData.education.map((edu, index: number) => (
                         <div key={edu.id} className="mb-2">
                           <div className="flex justify-between">
                             <h3 className="font-bold text-gray-800">{edu.degree}</h3>
@@ -113,6 +253,7 @@ export function ResumePreview({ templateId, resumeData }: ResumePreviewProps) {
                               {edu.startDate} - {edu.endDate}
                             </span>
                           </div>
+                         mand
                           <p className="text-gray-700">{edu.institution}</p>
                           {edu.description && (
                             <p className="text-sm text-gray-700 mt-1">{edu.description}</p>
@@ -126,7 +267,7 @@ export function ResumePreview({ templateId, resumeData }: ResumePreviewProps) {
                     <div>
                       <h2 className="text-xl font-bold text-black border-b border-gray-300 pb-1 mb-2">Skills</h2>
                       <div className="flex flex-wrap gap-2">
-                        {resumeData.skills.map((skill: any) => (
+                        {resumeData.skills.map((skill) => (
                           <Badge key={skill.id} variant="outline" className="bg-gray-100 text-gray-800">
                             {skill.name}
                           </Badge>
@@ -161,7 +302,7 @@ export function ResumePreview({ templateId, resumeData }: ResumePreviewProps) {
                 </Select>
               </div>
 
-              <Button className="w-full gap-2">
+              <Button className="w-full gap-2 button" onClick={handleDownload}>
                 <Download size={16} />
                 Download Resume
               </Button>
@@ -171,11 +312,11 @@ export function ResumePreview({ templateId, resumeData }: ResumePreviewProps) {
               <div className="space-y-2">
                 <h4 className="font-medium">Other Options</h4>
                 <div className="grid grid-cols-2 gap-2">
-                  <Button variant="outline" className="gap-2">
+                  <Button variant="outline" className="gap-2 button" onClick={handlePrint}>
                     <Printer size={16} />
                     Print
                   </Button>
-                  <Button variant="outline" className="gap-2">
+                  <Button variant="outline" className="gap-2 button" onClick={handleShare}>
                     <Share2 size={16} />
                     Share
                   </Button>
@@ -228,9 +369,9 @@ export function ResumePreview({ templateId, resumeData }: ResumePreviewProps) {
                 </div>
               </div>
 
-              <Button variant="outline" className="w-full">
+              {/* <Button variant="outline" className="w-full button">
                 View Full Analysis
-              </Button>
+              </Button> */}
             </div>
           </CardContent>
         </Card>
